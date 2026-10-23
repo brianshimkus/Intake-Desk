@@ -1,0 +1,27 @@
+# Secrets
+.env
+.env.local
+api/.env
+web/.env.local
+
+# Python
+api/.venv/
+api/__pycache__/
+api/.pytest_cache/
+api/.coverage
+api/htmlcov/
+api/*.db
+
+# Node
+web/node_modules/
+web/.next/
+web/playwright-report/
+web/test-results/
+
+# System and editors
+.DS_Store
+.idea/
+.vscode/
+
+# Local artifacts
+artifacts/

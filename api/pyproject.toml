@@ -1,0 +1,26 @@
+[project]
+name = "intake-desk-api"
+version = "0.1.0"
+description = "Human-reviewed intake workflow using fictional demo data."
+authors = [
+    { name = "Brian Shimkus", email = "brianshimkus1@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "email-validator>=2.3.0",
+    "fastapi[standard]>=0.161.1",
+    "openai>=3.37.0",
+    "pydantic-settings>=2.16.1",
+    "sqlmodel>=0.0.48",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
