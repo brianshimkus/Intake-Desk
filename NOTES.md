@@ -18,4 +18,16 @@ The published case study called it an employment office. The sample inquiries an
 
 ## Blog titles
 
-Do not number posts as Day 1, Day 2, and so on. The title is a catchy claim a stranger would click. The series still groups as Intake Desk. Previous / next can follow publish date. The site currently labels series cards with `Day N`; change that when the first Intake Desk post ships, not before.
+Do not number posts as Day 1, Day 2, and so on. The title is a catchy claim a stranger would click. The series still groups as Intake Desk. Previous / next can follow publish date. Cards for this series show `Intake Desk`, not `Intake Desk · Day N`.
+
+First post: [I built the empty office first](https://www.brianshimkus.com/blog/intake-desk-empty-office).
+
+## Day 1 discussion
+1. **Why is the model name configuration, not a string in main.py?**
+Model name, not mode name. `EXTRACTION_MODE` is fake vs openai. `OPENAI_MODEL` is which model OpenAI actually runs. Those names change (`gpt-4o`, whatever ships next). If the ID lives in main.py, every swap is a code change and the eval report cannot say which model produced the numbers. An env var keeps that outside the app.
+
+2. **Why will production reject arbitrary pasted text?**
+Real legal info is the main reason. The other reason is money: a public text box is an open tab on your OpenAI bill. Server-owned scenarios cap both.
+
+3. **What does CORS protect, and what does it not protect?**
+CORS is a browser rule, not a lock on the API. It tells the visitor’s browser: “only pages from http://localhost:3000 may read this response.” That stops a random website from using someone’s browser as a middleman.
