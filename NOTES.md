@@ -22,6 +22,10 @@ Do not number posts as Day 1, Day 2, and so on. The title is a catchy claim a st
 
 First post: [I built the empty office first](https://www.brianshimkus.com/blog/intake-desk-empty-office).
 
+## Seed data is not ORM rows
+
+The three fictional existing clients are stored as dictionaries. `seed_demo_crm` builds a new `DemoContact` only when it inserts. If those were live SQLModel objects at import time, the test database and the app database would fight over the same Python object.
+
 ## Day 1 discussion
 1. **Why is the model name configuration, not a string in main.py?**
 Model name, not mode name. `EXTRACTION_MODE` is fake vs openai. `OPENAI_MODEL` is which model OpenAI actually runs. Those names change (`gpt-4o`, whatever ships next). If the ID lives in main.py, every swap is a code change and the eval report cannot say which model produced the numbers. An env var keeps that outside the app.
@@ -31,3 +35,25 @@ Real legal info is the main reason. The other reason is money: a public text box
 
 3. **What does CORS protect, and what does it not protect?**
 CORS is a browser rule, not a lock on the API. It tells the visitor’s browser: “only pages from http://localhost:3000 may read this response.” That stops a random website from using someone’s browser as a middleman.
+
+## Day 2 discussion
+1. **Why is a possible name match not a definitive conflict?**
+The match is not “two law firms with the same name.” It is “the other party in this inquiry has the same name as someone already in Lakefront Legal’s files.”
+
+Northstar is already a client. A new message says the dispute is with Northstar. That might be a real problem (you cannot represent both sides), or it might be a different company, a typo, or an old name. Exact name matching cannot tell those apart, and a conflict check is a legal conclusion this product is not allowed to make. So the system only says possible, and a person looks.
+
+Same name and different email is one reason a match can be wrong. It is not the only reason, and email is not how version one compares.
+
+2. **Why is the original source stored separately from `final_record`?**
+Approval is not the reason they are separate. They stay separate after approval too.
+> `raw_text` is what the person wrote. It never changes.
+> `extraction` is the model’s draft. It can be wrong.
+> `final_record` is what the reviewer saved. They may have edited it.
+If you overwrite the original with the approved form, you can no longer prove a quote was in the message, and you cannot see what the prospect said versus what the firm stored.
+
+3. **Why must a seed function be idempotent?**
+“So it can seed twice” is the behavior, not the reason.
+
+The API process starts over and over: every time you run `fastapi dev`, every reload, every deploy, every test. Without the early return, each start would insert another Northstar, Evelyn, and Apex. The demo CRM would fill with duplicates, and “three existing clients” would be a lie.
+
+Idempotent here means: first start creates three rows. Every later start sees they exist and stops.
